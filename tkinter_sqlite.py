@@ -1,7 +1,17 @@
 #Python version 3.10.0
 import tkinter
 import tkinter.messagebox
-import pickle
+import sqlite3
+
+# Setup the database
+conn = sqlite3.connect('tasks.sqlite')
+cur = conn.cursor()
+cur.execute("""CREATE TABLE IF NOT EXISTS tasks(
+   task TEXT,
+   due TEXT,
+   priority INT);
+""")
+conn.commit()
 
 win = tkinter.Tk() #creating the main window and storing the window object in 'win'
 #We create the widgets here
@@ -11,31 +21,30 @@ win.geometry('500x400') #setting the size of the window
 def add_task():
     task = entry_task.get()
     if task != "":
-        listbox_tasks.insert(tkinter.END, task)
-        entry_task.delete(0, tkinter.END)
+        full_task = (task, "never", 1)
+        cur.execute("INSERT INTO tasks VALUES(?, ?, ?);", full_task)
+        conn.commit()
+        update_gui()
     else:
         tkinter.messagebox.showwarning(title="Warning!", message="You must enter a task.")
 
+def update_gui():
+    listbox_tasks.delete(0,listbox_tasks.size()) # delete all of the current tasks from the gui
+    cur.execute("SELECT * FROM tasks;")
+    all_results = cur.fetchall()
+    for item in all_results:
+        listbox_tasks.insert(tkinter.END, item) # add each item in our python List back to the gui
+        entry_task.delete(0, tkinter.END)
+
 def delete_task():
     try:
-        task_index = listbox_tasks.curselection() [0] #cur-selection NOT curse-selection
-        listbox_tasks.delete(task_index)
+        task_pos = listbox_tasks.curselection()[0] #cur-selection NOT curse-selection
+        task = listbox_tasks.get(task_pos)
+        cur.execute("DELETE FROM tasks WHERE task=?;",task[0]) # Currently NOT working
+        conn.commit()
+        update_gui()
     except:
        tkinter.messagebox.showwarning(title="Warning!", message="You must select a task.") 
-
-def load_tasks():
-    try:
-        tasks = pickle.load(open("tasks.dat","rb"))
-        listbox_tasks.delete(0, tkinter.END)
-        for task in tasks:
-            listbox_tasks.insert(tkinter.END, task)
-    except:
-        tkinter.messagebox.showwarning(title="Warning!", message="No tasks found.")
-
-def save_tasks():
-    tasks = listbox_tasks.get(0, listbox_tasks.size())
-    
-    pickle.dump(tasks, open("tasks.dat", "wb"))
 
 #Create GUI
 frame_tasks = tkinter.Frame(win)
@@ -59,18 +68,6 @@ button_add_task.pack()
 button_delete_task = tkinter.Button(win, text="Delete task", width=50, command=delete_task)
 button_delete_task.pack()
 
-button_load_tasks = tkinter.Button(win, text="Load tasks", width=50, command=load_tasks)
-button_load_tasks.pack()
-
-button_save_tasks = tkinter.Button(win, text="Save tasks", width=50, command=save_tasks)
-button_save_tasks.pack()
-
-
-
-#def func():
-    #tkinter.messagebox.showinfo("Task Entry", "Please Enter any Task!")#defines function of the button with (title of window, pop-up display)
-
-#btn = Tk.Button(win, text= "Task Entry", width = 10, height = 5, command =func) #adding a button to the window
-#btn.place(x=200, y=30)
+update_gui()
 
 win.mainloop() #running the loop that works as a trigger
