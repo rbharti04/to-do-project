@@ -28,6 +28,17 @@ def add_task():
     else:
         tkinter.messagebox.showwarning(title="Warning!", message="You must enter a task.")
 
+def delete_task():
+    try:
+        task_pos = listbox_tasks.curselection()[0] #cur-selection NOT curse-selection
+        task = listbox_tasks.get(task_pos)
+        # WARNING: If duplicate tasks exist, this will currently delete them all!
+        cur.execute("DELETE FROM tasks WHERE task=?;",(str(task[0]),))
+        conn.commit()
+        update_gui()
+    except:
+       tkinter.messagebox.showwarning(title="Warning!", message="You must select a task.") 
+       
 def update_gui():
     listbox_tasks.delete(0,listbox_tasks.size()) # delete all of the current tasks from the gui
     cur.execute("SELECT * FROM tasks;")
@@ -35,16 +46,6 @@ def update_gui():
     for item in all_results:
         listbox_tasks.insert(tkinter.END, item) # add each item in our python List back to the gui
         entry_task.delete(0, tkinter.END)
-
-def delete_task():
-    try:
-        task_pos = listbox_tasks.curselection()[0] #cur-selection NOT curse-selection
-        task = listbox_tasks.get(task_pos)
-        cur.execute("DELETE FROM tasks WHERE task=?;",task[0]) # Currently NOT working
-        conn.commit()
-        update_gui()
-    except:
-       tkinter.messagebox.showwarning(title="Warning!", message="You must select a task.") 
 
 #Create GUI
 frame_tasks = tkinter.Frame(win)
