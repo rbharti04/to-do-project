@@ -1,8 +1,8 @@
 #Python version 3.10.0
 import tkinter
 import tkinter.messagebox
-from tkinter import *
-from tkinter import ttk
+from tkinter import * #imports all tkinter functions and modules
+from tkinter import ttk #style widget
 import sqlite3
 
 # Setup the database
