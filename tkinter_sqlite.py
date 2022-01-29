@@ -51,7 +51,17 @@ def delete_task():
     conn.commit()
     clear_text()
     populate_list()
-       
+
+def sort_task():
+    try:
+        SELECT
+            select_list
+        FROM
+            TABLE
+        ORDER BY
+            column_1 ASC
+    clear_text()
+    populate_list()
         
 def select_task(event):
     try:
