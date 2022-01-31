@@ -1,9 +1,11 @@
 #Python version 3.10.0
+from queue import PriorityQueue
 import tkinter
 import tkinter.messagebox
 from tkinter import * #imports all tkinter functions and modules
 from tkinter import ttk #style widget
 import sqlite3
+from typing import List
 
 # Setup the database
 conn = sqlite3.connect('tasks.sqlite')
@@ -49,17 +51,6 @@ def delete_task():
     id = selected_item[0]
     cur.execute("DELETE FROM tasks WHERE id=?", (id,))
     conn.commit()
-    clear_text()
-    populate_list()
-
-def sort_task():
-    try:
-        SELECT
-            select_list
-        FROM
-            TABLE
-        ORDER BY
-            column_1 ASC
     clear_text()
     populate_list()
         
