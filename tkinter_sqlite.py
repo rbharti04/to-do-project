@@ -15,7 +15,7 @@ cur.execute("""CREATE TABLE IF NOT EXISTS tasks(
    task TEXT,
    due TEXT,
    priority INT);
-""")
+""") #sets up the table with task, due date, and priority using text and integers
 conn.commit()
 
 win = tkinter.Tk() #creating the main window and storing the window object in 'win'
@@ -29,12 +29,12 @@ def clear_text():
     priority_entry.delete(0, END)
     
 def fetch(task=''):
-        cur.execute("SELECT * FROM tasks WHERE task LIKE ?", ('%'+task+'%',))
+        cur.execute("SELECT * FROM tasks WHERE task LIKE ?", ('%'+task+'%',))#why is there a comma within the second set of parantheses on this line?
         rows = cur.fetchall()
         return rows
 
 def populate_list(task=''):
-    for i in view.get_children():
+    for i in view.get_tasks():
         view.delete(i)
     for row in fetch(task):
         view.insert('', 'end', values=row)
