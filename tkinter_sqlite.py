@@ -75,7 +75,7 @@ frame_search = Frame(app)
 frame_search.grid(row=0, column=0) #using .grid allows you to control which part of the grid the edits will apply to
 
 lbl_search = Label(frame_search, text='Search by task', font=('bold', 12), pady=20)
-lbl_search.grid(row=0, column=0, sticky=W)
+lbl_search.grid(row=0, column=0, sticky=W) #what is sticky and what does the W and E do?
 task_search = StringVar()
 task_search_entry = Entry(frame_search, textvariable=task_search)
 task_search_entry.grid(row=0, column=1)
@@ -109,24 +109,30 @@ due_date_label.grid(row=1, column=0, sticky=E)
 due_date_entry = Entry(frame_fields, textvariable=due_date_text)
 due_date_entry.grid(row=1, column=1, sticky=W)
 
+task_text = StringVar()
+task_label = tkinter.Label(win, text='Task Text', font=('bold', 12))
+task_label.grid(row=0, column=0, sticky=E)
+task_entry = tkinter.Entry(win, textvariable=task_text, width = 50)
+task_entry.grid(row=0, column=1, sticky=W)
 
 priority_text = StringVar()
 priority_label = tkinter.Label(win, text='Priority (1 low - 10 high)', font=('bold', 12))
-priority_label.grid(row=0, column=0, sticky=E)
+priority_label.grid(row=1, column=0, sticky=E)
 priority_entry = tkinter.Entry(win, textvariable=priority_text, width = 50)
-priority_entry.grid(row=0, column=1, sticky=W)
+priority_entry.grid(row=1, column=1, sticky=W)
 
 due_text = StringVar()
 due_label = tkinter.Label(win, text='Due Date (dd/mm/yyyy)', font=('bold', 12))
-due_label.grid(row=1, column=0, sticky=E)
+due_label.grid(row=2, column=0, sticky=E)
 due_entry = tkinter.Entry(win, textvariable=due_text, width = 50)
-due_entry.grid(row=1, column=1, sticky=W)
+due_entry.grid(row=2, column=1, sticky=W)
 
-task_text = StringVar()
-task_label = tkinter.Label(win, text='Task Text', font=('bold', 12))
-task_label.grid(row=2, column=0, sticky=E)
-task_entry = tkinter.Entry(win, textvariable=task_text, width = 50)
-task_entry.grid(row=2, column=1, sticky=W)
+frame_router = Frame(app)
+frame_router.grid(row=4, column=0, columnspan=4, rowspan=6, pady=20, padx=20)
+
+columns = ['id', 'Task', 'Priority', 'Due Date'] #what is the id for?
+router_tree_view = Treeview(frame_router, columns=columns, show="headings") #why do we put columns=columns?
+router_tree_view.column("id", width=30)
 
 frame_btns = tkinter.Frame(win)
 frame_btns.grid(row=3, column=0)
