@@ -4,6 +4,7 @@ import tkinter
 import tkinter.messagebox
 from tkinter import * #imports all tkinter functions and modules
 from tkinter import ttk #style widget
+from tkinter.ttk import Treeview 
 import sqlite3
 from typing import List
 
@@ -69,6 +70,46 @@ def select_task(event):
         pass
 
 #Create GUI
+app = Tk()
+frame_search = Frame(app)
+frame_search.grid(row=0, column=0) #using .grid allows you to control which part of the grid the edits will apply to
+
+lbl_search = Label(frame_search, text='Search by task', font=('bold', 12), pady=20)
+lbl_search.grid(row=0, column=0, sticky=W)
+task_search = StringVar()
+task_search_entry = Entry(frame_search, textvariable=task_search)
+task_search_entry.grid(row=0, column=1)
+
+lbl_search = Label(frame_search, text='Search by Priority', font=('bold', 12), pady=20)
+lbl_search.grid(row=1, column=0, sticky=W)
+priority_search = StringVar()
+priority_search.set("Select * from high priority tasks")
+priority_search_entry = Entry(frame_search, textvariable=priority_search, width=40)
+priority_search_entry.grid(row=1, column=1)
+
+frame_fields = Frame(app)
+frame_fields.grid(row=1, column=0)
+
+#task
+task_text = StringVar()
+task_label = Label(frame_fields, text='task', font=('bold', 12))
+task_label.grid(row=0, column=0, sticky=E)
+task_entry = Entry(frame_fields, textvariable=task_text)
+task_entry.grid(row=0, column=1, sticky=W)
+#priority
+priority_text = StringVar()
+priority_label = Label(frame_fields, text='priority', font=('bold', 12))
+priority_label.grid(row=0, column=2, sticky=E)
+priority_entry = Entry(frame_fields, textvariable=priority_text)
+priority_entry.grid(row=0, column=2, sticky=W)
+#due date
+due_date_text = StringVar()
+due_date_label = Label(frame_fields, text='due date', font=('bold', 12))
+due_date_label.grid(row=1, column=0, sticky=E)
+due_date_entry = Entry(frame_fields, textvariable=due_date_text)
+due_date_entry.grid(row=1, column=1, sticky=W)
+
+
 priority_text = StringVar()
 priority_label = tkinter.Label(win, text='Priority (1 low - 10 high)', font=('bold', 12))
 priority_label.grid(row=0, column=0, sticky=E)
