@@ -127,12 +127,21 @@ due_label.grid(row=2, column=0, sticky=E)
 due_entry = tkinter.Entry(win, textvariable=due_text, width = 50)
 due_entry.grid(row=2, column=1, sticky=W)
 
-frame_router = Frame(app)
-frame_router.grid(row=4, column=0, columnspan=4, rowspan=6, pady=20, padx=20)
+frame_tasks = Frame(app)
+frame_tasks.grid(row=4, column=0, columnspan=4, rowspan=6, pady=20, padx=20)
 
 columns = ['id', 'Task', 'Priority', 'Due Date'] #what is the id for?
-router_tree_view = Treeview(frame_router, columns=columns, show="headings") #why do we put columns=columns?
-router_tree_view.column("id", width=30)
+tasks_tree_view = Treeview(frame_tasks, columns=columns, show="headings") #why do we put columns=columns?
+tasks_tree_view.column("id", width=30)
+for col in columns[1:]:
+    tasks_tree_view.column(col, width=120)
+    tasks_tree_view.heading(col, text=col)
+tasks_tree_view.bind('<<TreeviewSelect>>', select_task)#why are there the double arrow (<<,>>)
+tasks_tree_view.pack(side="left", fill="y")
+scrollbar = Scrollbar(frame_tasks, orient= 'vertical')
+scrollbar.configure(command=tasks_tree_view.yview)
+scrollbar.pack(side="right", fill="y")
+tasks_tree_view.config(yscrollcommand=scrollbar.set)
 
 frame_btns = tkinter.Frame(win)
 frame_btns.grid(row=3, column=0)
