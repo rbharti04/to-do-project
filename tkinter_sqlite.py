@@ -9,33 +9,44 @@ from tkinter.ttk import Treeview
 import sqlite3
 from typing import List
 
-# Setup the database
-conn = sqlite3.connect('tasks.sqlite')
-cur = conn.cursor()
-cur.execute("""CREATE TABLE IF NOT EXISTS tasks(
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
-   task TEXT,
-   due TEXT,
-   priority INT);
-""") #sets up the table with task, due date, and priority using text and integers
-conn.commit()
-
 app = Tk()
+
+# Setup the database
+class Database:
+    def __init__(self,db):
+        self.conn = sqlite3.connect(db)
+        self.cur = self.conn.cursor()
+        self.cur.execute("CREATE TABLE IF NOT EXISTS to-do (id INTEGER PRIMARY KEY, task text, due text, priority integer)")
+        self.conn.commit()
+    def fetch(self, task=''):
+        self.cur.execute("SELECT * FROM to-do where task LIKE ?", ('%'+task+'%'))
+        rows = self.cur.fetchall()
+        return rows
+
+    def fetch2(self, priority):
+        self.cur.execute(priority)
+        rows = self.cur.fetchall()
+        return rows
+    
+    def insert(self, task, due, priority):
+        self.cur.execute("INSERT INTO to-do VALUES (NULL, ?, ?, ?)", (task, due, priority))
+        self.conn.commit()
+    
+    def remove(self, id):
+        self.cur.execute("DELETE FROM to-do WHERE id=?", (id,))
+        self.conn.commit()
+    
+    def update(self, id, task, due, priority):
+        self.cur.execute("UPDATE to-do SET task = ?, due = ?, priority = ?", (task, due, priority, id))
+        self.conn.commit()
+
+    def __del__(self):
+        self.conn.close()
 
 def clear_text():
     task_entry.delete(0, END)
     due_date_entry.delete(0, END)
     priority_entry.delete(0, END)
-    
-def fetch(task=''):
-        cur.execute("SELECT * FROM tasks WHERE task LIKE ?", ('%'+task+'%'))
-        rows = cur.fetchall()
-        return rows
-
-def fetch2(tasks=''):
-        cur.execute("SELECT * FROM tasks WHERE task LIKE ?", ('%'+tasks+'%'))
-        rows = cur.fetchall()
-        return rows
 
 def populate_list(task=''):
     for i in task_tree_view.get_children():
@@ -43,7 +54,7 @@ def populate_list(task=''):
     for row in fetch(task):
         task_tree_view.insert('', 'end', values=row)
 
-def populate_list2(tasks=''):
+def populate_list2(search='SELECT * FROM tasks'):
     for i in task_tree_view.get_children():
         task_tree_view.delete(i)
     for row in fetch2(tasks):
@@ -53,14 +64,13 @@ def add_task():
     if task_text.get() == '' or due_date_text.get() == '' or priority_text.get() == '':
         tkinter.messagebox.showwarning('Required Fields', 'Please include all fields')
         return
-    cur.execute("INSERT INTO tasks (task, due, priority) VALUES (?, ?, ?)", (str(task_text.get()), str(due_date_text.get), str(priority_text.get)))
+    cur.execute(task_text.get(), due_date_text.get(), priority_text.get())
     clear_text()
     populate_list()
 
 def delete_task():
     id = selected_item[0]
     cur.execute("DELETE FROM tasks WHERE id=?", (id,))
-    conn.commit()
     clear_text()
     populate_list()
         
