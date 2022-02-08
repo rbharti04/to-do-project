@@ -1,5 +1,6 @@
 #Python version 3.10.0
 from asyncio import tasks
+from os import remove
 from queue import PriorityQueue
 import tkinter
 import tkinter.messagebox
@@ -64,13 +65,13 @@ def add_task():
     if task_text.get() == '' or due_date_text.get() == '' or priority_text.get() == '':
         tkinter.messagebox.showwarning('Required Fields', 'Please include all fields')
         return
-    cur.execute(task_text.get(), due_date_text.get(), priority_text.get())
+    insert(task_text.get(), due_date_text.get(), priority_text.get())
     clear_text()
     populate_list()
 
 def delete_task():
     id = selected_item[0]
-    cur.execute("DELETE FROM tasks WHERE id=?", (id,))
+    remove("DELETE FROM tasks WHERE id=?", (id,))
     clear_text()
     populate_list()
         
