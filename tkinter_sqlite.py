@@ -10,7 +10,6 @@ from tkinter.ttk import Treeview
 import sqlite3
 from typing import List
 
-app = Tk()
 
 # Setup the database
 class Database:
