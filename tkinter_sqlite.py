@@ -43,13 +43,14 @@ def populate_list(task=''):
     for i in view.get_children():
         view.delete(i)
     for row in fetch(task):
+        print(row)
         view.insert('', 'end', values=row)
 
 def add_task():
     if task_text.get() == '' or due_text.get() == '' or priority_text.get() == '':
         tkinter.messagebox.showwarning('Required Fields', 'Please include all fields')
         return
-    cur.execute("INSERT INTO tasks (task, due, priority) VALUES (?, ?, ?)", (str(task_text.get()), str(due_text.get), str(priority_text.get)))
+    cur.execute("INSERT INTO tasks (task, due, priority) VALUES (?, ?, ?)", (str(task_text.get()), str(due_text.get()), str(priority_text.get())))
     clear_text()
     populate_list()
 
@@ -59,7 +60,6 @@ def delete_task():
     conn.commit()
     clear_text()
     populate_list()
-       
         
 def select_task(event):
     try:
