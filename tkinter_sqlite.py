@@ -43,8 +43,10 @@ def populate_list(task=''):
     for i in view.get_children():
         view.delete(i)
     for row in fetch(task):
-        print(row)
-        view.insert('', 'end', values=row)
+        a=[]
+        a.append((id, priority_entry, due_entry, task_entry))#I have a feeling I set this up wrong.
+        [x for xs in a for x in xs]#what is this part supposed to do? I am guessing I definitely need to change it to what I need. 
+        view.insert('', 'end', values=row)#once I fix the above, I need to change something here to make it display the corrected list.
 
 def add_task():
     if task_text.get() == '' or due_text.get() == '' or priority_text.get() == '':
