@@ -21,7 +21,7 @@ conn.commit()
 win = tkinter.Tk() #creating the main window and storing the window object in 'win'
 #We create the widgets here
 win.title('To-Do List') #setting the title of the window
-win.geometry('600x400') #setting the size of the window
+win.geometry('800x400') #setting the size of the window
 
 def clear_text():
     task_entry.delete(0, END)
@@ -41,7 +41,25 @@ def sort_lowest(task=''):
         for row in rows:
             row = [row[0], row[3], row[2], row[1]]
             view.insert('', 'end', values=row)
-           
+
+def sort_highest(task=''):
+        cur.execute("SELECT * FROM tasks WHERE task LIKE ? ORDER BY priority DESC", ('%'+task+'%',))
+        rows = cur.fetchall()
+        for i in view.get_children():
+            view.delete(i)
+        for row in rows:
+            row = [row[0], row[3], row[2], row[1]]
+            view.insert('', 'end', values=row)
+
+def sort_recent(task=''):
+        cur.execute("SELECT * FROM tasks WHERE task LIKE ? ORDER BY due ASC", ('%'+task+'%',))
+        rows = cur.fetchall()
+        for i in view.get_children():
+            view.delete(i)
+        for row in rows:
+            row = [row[0], row[3], row[2], row[1]]
+            view.insert('', 'end', values=row)
+
 def populate_list(task=''):
     for i in view.get_children():
         view.delete(i)
@@ -101,22 +119,28 @@ frame_btns = tkinter.Frame(win)
 frame_btns.grid(row=3, column=0)
 
 button_add_task = tkinter.Button(frame_btns, text="Add Task", command=add_task)
-button_add_task.grid(row=4, column = 0, pady=20)
+button_add_task.grid(row=4, column = 1, pady=20)
 
 button_delete_task = tkinter.Button(frame_btns, text="Delete Task", command=delete_task)
-button_delete_task.grid(row=4, column = 1, pady=20)
+button_delete_task.grid(row=4, column = 2, pady=20)
 
 button_sort_low = tkinter.Button(frame_btns, text="Sort by Lowest Priority", command=sort_lowest)
-button_sort_low.grid(row=4, column = 2, pady=20)
+button_sort_low.grid(row=4, column = 3, pady=20)
+
+button_sort_high = tkinter.Button(frame_btns, text="Sort by Highest Priority", command=sort_highest)
+button_sort_high.grid(row=4, column = 4, pady=20)
+
+button_sort_recent = tkinter.Button(frame_btns, text="Sort by Recent Due Dates", command=sort_recent)
+button_sort_recent.grid(row=4, column = 5, pady=20)
 
 frame_tasks = tkinter.Frame(win)
 frame_tasks.grid(row=5, column=0, columnspan=4, rowspan=6, pady=20, padx=20)
 columns = ['id','Priority','Due Date','Task']
 
 view = ttk.Treeview(frame_tasks, columns=columns, show="headings")
-view.column("id", width=20)
+view.column("id", width=10)
 for col in columns[1:]:
-    view.column(col, width = 180)
+    view.column(col, width = 170)
     view.heading(col, text=col)
 view.bind('<<TreeviewSelect>>',select_task)
 view.pack(side="left", fill="y")
