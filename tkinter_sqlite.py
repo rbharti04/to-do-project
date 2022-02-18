@@ -5,6 +5,8 @@ from tkinter import * #imports all tkinter functions and modules
 from tkinter import ttk #style widget
 import sqlite3
 
+from numpy import row_stack
+
 # Setup the database
 conn = sqlite3.connect('tasks.sqlite')
 cur = conn.cursor()
@@ -25,12 +27,20 @@ def clear_text():
     task_entry.delete(0, END)
     due_entry.delete(0, END)
     priority_entry.delete(0, END)
-    
+
 def fetch(task=''):
         cur.execute("SELECT * FROM tasks WHERE task LIKE ?", ('%'+task+'%',))
         rows = cur.fetchall()
         return rows
 
+def populate_list(task=''):
+    for i in view.get_children():
+        view.delete(i)
+    for row in fetch(task):
+        a=[row[0], row[3], row[2], row[1]]#a is the array and then i can insert the correct order with the insert calling upon 'a' instead of the row order
+        view.insert('', 'end', values=a)
+
+#CHANGE BELOW SO IT DISPLAYS IN CORRECT COLUMNS AND ACTUALLY WORKS
 def sort_lowest(task=''):
         cur.execute("SELECT * FROM tasks WHERE task LIKE ? ORDER BY due ASC", ('%'+task+'%',))
         rows = cur.fetchall()
@@ -38,15 +48,6 @@ def sort_lowest(task=''):
             view.delete(i)
         for row in rows:
             view.insert('', 'end', values=row)
-            
-def populate_list(task=''):
-    for i in view.get_children():
-        view.delete(i)
-    for row in fetch(task):
-        a=[]
-        a.append((id, priority_entry, due_entry, task_entry))#I have a feeling I set this up wrong.
-        [x for xs in a for x in xs]#what is this part supposed to do? I am guessing I definitely need to change it to what I need. 
-        view.insert('', 'end', values=row)#once I fix the above, I need to change something here to make it display the corrected list.
 
 def add_task():
     if task_text.get() == '' or due_text.get() == '' or priority_text.get() == '':
@@ -100,7 +101,7 @@ frame_btns = tkinter.Frame(win)
 frame_btns.grid(row=3, column=0)
 
 button_add_task = tkinter.Button(frame_btns, text="Add Task", command=add_task)
-button_add_task.grid(row=4, column = 0, padx=20, pady=20)
+button_add_task.grid(row=4, column = 0, pady=20)
 
 button_delete_task = tkinter.Button(frame_btns, text="Delete Task", command=delete_task)
 button_delete_task.grid(row=4, column = 1, pady=20)
