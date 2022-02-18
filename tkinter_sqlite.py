@@ -33,21 +33,21 @@ def fetch(task=''):
         rows = cur.fetchall()
         return rows
 
+def sort_lowest(task=''):
+        cur.execute("SELECT * FROM tasks WHERE task LIKE ? ORDER BY priority ASC", ('%'+task+'%',))
+        rows = cur.fetchall()
+        for i in view.get_children():
+            view.delete(i)
+        for row in rows:
+            row = [row[0], row[3], row[2], row[1]]
+            view.insert('', 'end', values=row)
+           
 def populate_list(task=''):
     for i in view.get_children():
         view.delete(i)
     for row in fetch(task):
         a=[row[0], row[3], row[2], row[1]]#a is the array and then i can insert the correct order with the insert calling upon 'a' instead of the row order
         view.insert('', 'end', values=a)
-
-#CHANGE BELOW SO IT DISPLAYS IN CORRECT COLUMNS AND ACTUALLY WORKS
-def sort_lowest(task=''):
-        cur.execute("SELECT * FROM tasks WHERE task LIKE ? ORDER BY due ASC", ('%'+task+'%',))
-        rows = cur.fetchall()
-        for i in view.get_children():
-            view.delete(i)
-        for row in rows:
-            view.insert('', 'end', values=row)
 
 def add_task():
     if task_text.get() == '' or due_text.get() == '' or priority_text.get() == '':
