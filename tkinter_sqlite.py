@@ -74,6 +74,7 @@ def add_task():
     cur.execute("INSERT INTO tasks (task, due, priority) VALUES (?, ?, ?)", (str(task_text.get()), str(due_text.get()), str(priority_text.get())))
     clear_text()
     populate_list()
+    conn.commit()
 
 def delete_task():
     id = selected_item[0]
@@ -149,4 +150,5 @@ scrollbar.configure(command=view.yview)
 scrollbar.pack(side="right", fill="y")
 view.config(yscrollcommand=scrollbar.set)
 
+populate_list()
 win.mainloop() #running the loop that works as a trigger
