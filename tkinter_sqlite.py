@@ -4,7 +4,7 @@ import tkinter.messagebox
 from tkinter import * #imports all tkinter functions and modules
 from tkinter import ttk #style widget
 import sqlite3
-
+from tkcalendar import *
 from numpy import row_stack
 
 # Setup the database
@@ -109,6 +109,18 @@ due_label = tkinter.Label(win, text='Due Date (dd/mm/yyyy)', font=('bold', 12))
 due_label.grid(row=1, column=0, sticky=E)
 due_entry = tkinter.Entry(win, textvariable=due_text, width = 50)
 due_entry.grid(row=1, column=1, sticky=W)
+
+cal = Calendar(win, selectmode="day", year=2022, month=3, day=15)
+cal.pack(pady=20)
+
+def grab_date():
+    calendar_label.config(text=cal.get_date())
+
+calendar_button = Button(win, text="Get Date", command=grab_date)
+calendar_button.pack(pady=20)
+
+calendar_label = Label(win, text="")
+calendar_label.pack(pady=20)
 
 task_text = StringVar()
 task_label = tkinter.Label(win, text='Task Text', font=('bold', 12))
