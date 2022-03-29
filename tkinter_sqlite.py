@@ -105,27 +105,10 @@ priority_label.grid(row=0, column=0, sticky=E) #using .grid allows you to contro
 priority_entry = tkinter.Entry(win, textvariable=priority_text, width = 50)
 priority_entry.grid(row=0, column=1, sticky=W)
 
-
-calendardate= StringVar()
-
-def create():
-    calendarwin= Toplevel(win)
-    calendarwin.geometry('500x300')
-    cal = Calendar(calendarwin, selectmode="day", year=2022, month=3, day=15)
-    cal.pack(pady=20)
-    def grab_date():
-        calendar_label.config(text=cal.get_date())
-        global calendardate
-        calendardate=calendar_label.cget("text")
-    calendar_button = Button(calendarwin, text="Get Date", command=grab_date)
-    calendar_button.pack(pady=20)
-    calendar_label = Label(calendarwin, text="")
-    calendar_label.pack(pady=20)
-
-due_text = calendardate
+due_text = StringVar()
 due_label = tkinter.Label(win, text='Due Date (dd/mm/yyyy)', font=('bold', 12))
 due_label.grid(row=1, column=0, sticky=E)
-due_entry = tkinter.Entry(win, textvariable=due_text, width = 50)
+due_entry = DateEntry(win, width=20, bd=2, textvariable=due_text)
 due_entry.grid(row=1, column=1, sticky=W)
 
 task_text = StringVar()
@@ -136,9 +119,6 @@ task_entry.grid(row=2, column=1, sticky=W)
 
 frame_btns = tkinter.Frame(win)
 frame_btns.grid(row=3, column=0)
-
-button_new_window= tkinter.Button(frame_btns, text="new window", command=create)
-button_new_window.grid(row=4, column=6,pady=20)
 
 button_add_task = tkinter.Button(frame_btns, text="Add Task", command=add_task)
 button_add_task.grid(row=4, column = 1, pady=20)
