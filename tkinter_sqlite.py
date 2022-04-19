@@ -4,7 +4,7 @@ import tkinter.messagebox
 from tkinter import * #imports all tkinter functions and modules
 from tkinter import ttk #style widget
 import sqlite3
-from matplotlib.pyplot import text
+from matplotlib.pyplot import grid, text
 from tkcalendar import *
 from numpy import row_stack
 
@@ -98,6 +98,17 @@ def select_task(event):
     except IndexError:
         pass
 
+def mark_completed():
+    marked=task_entry.selection() #what is the correct functionnnnnnnn- I am working on it though
+    temp=marked[0]
+    #store the text of selected item in a string
+    temp_marked=task_entry.get(marked)
+    #update it 
+    temp_marked=temp_marked+" ✔"
+    #delete it then insert it 
+    task_entry.delete(temp)
+    task_entry.insert(temp,temp_marked)
+
 #Create GUI
 priority_text = StringVar()
 priority_label = tkinter.Label(win, text='Priority (1 low - 10 high)', font=('bold', 12))
@@ -134,6 +145,9 @@ button_sort_high.grid(row=4, column = 4, pady=20)
 
 button_sort_recent = tkinter.Button(frame_btns, text="Sort by Recent Due Dates", command=sort_recent)
 button_sort_recent.grid(row=4, column = 5, pady=20)
+
+button_mark_completed = tkinter.Button(frame_btns, text="Completed Task", command=mark_completed)
+button_mark_completed.grid(row=4, column=6, pady=20)
 
 frame_tasks = tkinter.Frame(win)
 frame_tasks.grid(row=5, column=0, columnspan=4, rowspan=6, pady=20, padx=20)
